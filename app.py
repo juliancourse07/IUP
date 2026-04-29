@@ -1,6 +1,12 @@
 # =============================================================
 # DASHBOARD UNIPUTUMAYO — VALOR AGREGADO SABER T&T
 # =============================================================
+import streamlit as st
+
+LOGO_URL = "https://i0.wp.com/itp.edu.co/ITP2022/wp-content/uploads/2025/11/Logo-azul-PNG-01-scaled.webp?fit=1920%2C620&ssl=1"
+
+with st.sidebar:
+    st.image(LOGO_URL, use_container_width=True)
 
 import numpy as np
 import pandas as pd
