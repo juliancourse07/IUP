@@ -67,9 +67,16 @@ La aplicación quedará disponible en `http://localhost:8501`.
 
 ## Logo institucional
 
-1. Guarda el logo oficial como `assets/logo_uniputumayo.png`.
-2. El app lo detectará automáticamente y lo mostrará en el encabezado.
-3. Ver instrucciones detalladas en `assets/README.md`.
+El archivo `assets/logo-uniputumayo.webp` contiene el logo institucional de Uniputumayo.
+
+**Fuente original:** [Logo azul Uniputumayo — itp.edu.co](https://itp.edu.co/ITP2022/wp-content/uploads/2025/11/Logo-azul-PNG-01-scaled.webp)
+
+Para reemplazarlo con la imagen oficial:
+1. Descarga el logo desde la fuente indicada arriba.
+2. Guárdalo en el repositorio como `assets/logo-uniputumayo.webp`.
+3. El app lo detectará automáticamente y lo mostrará en el encabezado y la barra lateral.
+
+> **Nota:** Si prefieres usar PNG, guarda el archivo como `assets/logo_uniputumayo.png` y el app también lo reconocerá como alternativa.
 
 ---
 

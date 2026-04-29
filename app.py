@@ -142,10 +142,21 @@ if not PROGRAMAS:
 # Optional logo
 import os
 
-logo_path = os.path.join(os.path.dirname(__file__), "assets", "logo_uniputumayo.png")
+_assets_dir = os.path.dirname(__file__)
+logo_path = next(
+    (
+        p
+        for p in [
+            os.path.join(_assets_dir, "assets", "logo-uniputumayo.webp"),
+            os.path.join(_assets_dir, "assets", "logo_uniputumayo.png"),
+        ]
+        if os.path.isfile(p) and os.path.getsize(p) > 0
+    ),
+    None,
+)
 col_logo, col_title = st.columns([1, 8])
 with col_logo:
-    if os.path.isfile(logo_path) and os.path.getsize(logo_path) > 0:
+    if logo_path:
         st.image(logo_path, width=90)
     else:
         st.markdown("🎓", unsafe_allow_html=False)
@@ -168,6 +179,8 @@ with col_title:
 # =============================================================
 
 with st.sidebar:
+    if logo_path:
+        st.image(logo_path, use_container_width=True)
     st.markdown("## 🎛️ Filtros")
     st.markdown("---")
 
@@ -298,12 +311,13 @@ with tab1:
     styled = df_show.style.map(_color_va, subset=comp_cols).format(
         {c: "{:.3f}" for c in comp_cols}, na_rep="-"
     )
-    st.dataframe(styled, use_container_width=True, height=400)
+    st.dataframe(styled, use_container_width=True, height=400, key="tab1_df_resumen")
 
     st.markdown("#### Comparación VA Total por Programa")
     st.plotly_chart(
         fig_comparacion_programas(df_resultados, anio_sel, "Valor Agregado Total"),
         use_container_width=True,
+        key="tab1_chart_va_total",
     )
 
 # ──────────────────────────────────────────────────────────────
@@ -346,18 +360,21 @@ with tab2:
     styled2 = df_tabla.style.map(_color_va, subset=comp_cols2).format(
         {c: "{:.3f}" for c in comp_cols2}, na_rep="-"
     )
-    st.dataframe(styled2, use_container_width=True)
+    st.dataframe(styled2, use_container_width=True, key="tab2_df_va")
 
     st.markdown("---")
     col_g1, col_g2 = st.columns(2)
     with col_g1:
         st.plotly_chart(
-            fig_va_tendencia(df_prog_res, programa_sel), use_container_width=True
+            fig_va_tendencia(df_prog_res, programa_sel),
+            use_container_width=True,
+            key="tab2_chart_tendencia",
         )
     with col_g2:
         st.plotly_chart(
             fig_radar_programa(df_resultados, programa_sel, anio_sel),
             use_container_width=True,
+            key="tab2_chart_radar",
         )
 
     st.markdown("---")
@@ -393,6 +410,7 @@ with tab3:
     st.plotly_chart(
         fig_comparacion_programas(df_resultados, anio_sel, componente_sel),
         use_container_width=True,
+        key="tab3_chart_sel",
     )
 
     st.markdown("---")
@@ -406,17 +424,20 @@ with tab3:
             st.plotly_chart(
                 fig_comparacion_programas(df_resultados, anio_sel, lc),
                 use_container_width=True,
+                key=f"tab3_chart_{lc}",
             )
         with c_r:
             st.plotly_chart(
                 fig_comparacion_programas(df_resultados, anio_sel, rc),
                 use_container_width=True,
+                key=f"tab3_chart_{rc}",
             )
     # Handle odd component (Comunicación Escrita is the 5th)
     if len(comp_pairs) % 2 != 0:
         st.plotly_chart(
             fig_comparacion_programas(df_resultados, anio_sel, comp_pairs[-1]),
             use_container_width=True,
+            key=f"tab3_chart_{comp_pairs[-1]}",
         )
 
 # ──────────────────────────────────────────────────────────────
@@ -424,7 +445,7 @@ with tab3:
 # ──────────────────────────────────────────────────────────────
 with tab4:
     st.markdown(f"### 📈 Histórico de Puntajes — {programa_sel}")
-    st.plotly_chart(fig_promedios(dfs, programa_sel), use_container_width=True)
+    st.plotly_chart(fig_promedios(dfs, programa_sel), use_container_width=True, key="tab4_chart_promedios")
 
     st.markdown("#### Tabla de promedios")
     datos_prom = []
@@ -445,7 +466,7 @@ with tab4:
         datos_prom.append(fila_p)
 
     if datos_prom:
-        st.dataframe(pd.DataFrame(datos_prom), use_container_width=True)
+        st.dataframe(pd.DataFrame(datos_prom), use_container_width=True, key="tab4_df_promedios")
     else:
         st.info("No hay datos suficientes para el programa seleccionado.")
 
@@ -464,12 +485,13 @@ with tab5:
     if prog_filtro:
         df_data = df_data[df_data["estu_prgm_academico"].isin(prog_filtro)]
 
-    st.dataframe(df_data, use_container_width=True, height=500)
+    st.dataframe(df_data, use_container_width=True, height=500, key="tab5_df_datos")
     st.download_button(
         "⬇️ Descargar CSV",
         df_data.to_csv(index=False).encode("utf-8"),
         f"datos_tyt_{anio_data}.csv",
         "text/csv",
+        key="tab5_download",
     )
 
 # =============================================================
