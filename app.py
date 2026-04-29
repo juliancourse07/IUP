@@ -364,22 +364,22 @@ with tab2:
     st.markdown("#### 💬 Interpretación Automática")
     for _, row in df_prog_res.iterrows():
         va_t = row.get("Valor Agregado Total", np.nan)
-        año_r = int(row["Año"])
+        anio_r = int(row["Año"])
         if pd.notna(va_t):
             if va_t > 0.1:
                 msg = (
-                    f"✅ **{año_r}**: El programa muestra **valor agregado positivo "
+                    f"✅ **{anio_r}**: El programa muestra **valor agregado positivo "
                     f"significativo** (VA={va_t:.3f}). Los egresados superan lo esperado "
                     "según su entrada en Saber 11."
                 )
             elif va_t > 0:
                 msg = (
-                    f"🟡 **{año_r}**: El programa presenta **valor agregado positivo "
+                    f"🟡 **{anio_r}**: El programa presenta **valor agregado positivo "
                     f"leve** (VA={va_t:.3f}). Hay mejora, pero marginal."
                 )
             else:
                 msg = (
-                    f"❌ **{año_r}**: El programa presenta **valor agregado negativo** "
+                    f"❌ **{anio_r}**: El programa presenta **valor agregado negativo** "
                     f"(VA={va_t:.3f}). Los resultados están por debajo de lo esperado "
                     "dado el perfil de entrada."
                 )

@@ -4,6 +4,9 @@ from sklearn.linear_model import LinearRegression
 
 from modules.data_loader import COMPONENTES, COL_PROGRAMA, MUESTRA_MINIMA
 
+MUESTRA_MINIMA_MODELO = 30  # minimum global observations to fit a regression model
+MUESTRA_MINIMA_RESIDUALES = 3  # minimum paired (TyT, SB11) observations per program
+
 
 def _entrenar_modelos_globales(dfs: dict) -> dict:
     """
@@ -20,7 +23,7 @@ def _entrenar_modelos_globales(dfs: dict) -> dict:
                 continue
             mask = df_anio[var_tyt].notna() & df_anio[var_sb11].notna()
             df_c = df_anio[mask]
-            if len(df_c) < 30:
+            if len(df_c) < MUESTRA_MINIMA_MODELO:
                 continue
             modelo = LinearRegression()
             modelo.fit(df_c[[var_sb11]].values, df_c[var_tyt].values)
@@ -33,7 +36,7 @@ def _va_programa(
     anio: str,
     comp: str,
     var_tyt: str,
-    var_sb11,
+    var_sb11: str | None,
     df_anio: pd.DataFrame,
     modelos: dict,
 ) -> float | None:
@@ -56,7 +59,7 @@ def _va_programa(
 
     X = pd.to_numeric(df_prog[var_sb11], errors="coerce")
     mask = y_prog.notna() & X.notna()
-    if mask.sum() < 3:
+    if mask.sum() < MUESTRA_MINIMA_RESIDUALES:
         return None
 
     residuales = y_prog[mask].values - modelo.predict(
